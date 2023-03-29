@@ -76,14 +76,14 @@ const main = async () => {
   const featuresResult = logMissingFields(mdxFilesWithFeatures, mdxFileFrontmatter, 'features')
   const bugsResult = logMissingFields(mdxFilesWithBugs, mdxFileFrontmatter, 'bugs')
 
-  securityResult[0] > 0 ? exitCode = securityResult : exitCode
-  featuresResult[0] > 0 ? exitCode = featuresResult : exitCode
-  bugsResult[0] > 0 ? exitCode = bugsResult : exitCode
+  securityResult[0] > 0 ? exitCode = securityResult[0] : exitCode
+  featuresResult[0] > 0 ? exitCode = featuresResult[0] : exitCode
+  bugsResult[0] > 0 ? exitCode = bugsResult[0] : exitCode
 
   messages.push(securityResult[1])
   messages.push(featuresResult[1])
   messages.push(bugsResult[1])
-  console.log(messages)
+  console.log(messages.join(`\n`))
 
   const missingFiles = []
 
