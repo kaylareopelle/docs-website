@@ -7,6 +7,9 @@ on:
     paths:
       - 'src/content/docs/release-notes/agent-release-notes/**.mdx'
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   validate-agent-release-frontmatter:
     name: Validate agent release frontmatter
