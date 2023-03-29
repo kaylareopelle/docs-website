@@ -48,8 +48,6 @@ const main = async () => {
     process.exit(1)
   }
 
-  console.log(prFileData)
-
   mdxFileData = prFileData
     .filter((file) => path.extname(file.filename) === '.mdx')
     .filter((file) => file.filename.match(/.*\/release-notes\/agent-release-notes\/.*/))
