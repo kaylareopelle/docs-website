@@ -1,13 +1,12 @@
 const { fetchNRGraphqlResults } = require('../utils/nr-graphql-helpers');
 const { fetchPaginatedGHResults } = require('./utils/github-api-helpers');
-const fs = require('fs');
+const { getFileFrontmatter } = require('./utils/frontmatter-helpers')
+const { getCommandLineOptions } = require('./utils/cli-options')
 const path = require('path');
-const frontmatter = require('@github-docs/frontmatter');
-const { Command } = require('commander');
 const { prop } = require('../utils/functional');
 const { get } = require('lodash');
 
-const DATASOURCE_ID_QUERY = `# gql 
+const DATASOURCE_ID_QUERY = `# gql
 query DataSourceIdQuery {
   actor {
     nr1Catalog {
@@ -22,21 +21,6 @@ query DataSourceIdQuery {
   }
 }
 `;
-
-const getCommandLineOptions = () => {
-  // Sets up commander to use input arguments for this scripts from the CLI or GitHub Actions - CM
-  const program = new Command();
-  program.option('-u, --url <url>', 'url to PR of file changes');
-  program.parse(process.argv);
-  return program.opts();
-};
-
-const getFileFrontmatter = (mdxFile) => {
-  const contents = fs.readFileSync(path.join(process.cwd(), mdxFile));
-  const { data } = frontmatter(contents);
-
-  return { ...data, filename: mdxFile };
-};
 
 const main = async () => {
   const options = getCommandLineOptions();
