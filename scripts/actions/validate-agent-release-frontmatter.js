@@ -20,17 +20,18 @@ const findMissingFiles = (lilGroup, bigGroup) => {
 const logMissingFields = (subset, fullset, type) => {
   console.log(`Checking for missing ${type} fields...`)
   if(subset.length !== fullset.length) {
-    exitCode = 1
     const missingFiles = findMissingFiles(subset, fullset)
     let errorMessage = []
 
     errorMessage.push(`ERROR: ${type} front matter field not present in the following files`)
     missingFiles.forEach(filename => errorMessage.push(`- ${filename}`));
     errorMessage.push(`Please add '${type}: []' to the front matter on these files.`)
-    
+
     console.error(errorMessage.join(`\n`))
+    return 0
   } else {
     console.log(`PASS: Metadata fields for ${type} found in all changed agent release notes!`)
+    return 1
   }
 }
 
@@ -71,9 +72,9 @@ const main = async () => {
     ({ bugs }) => bugs !== undefined
   );
 
-  logMissingFields(mdxFilesWithSecurity, mdxFileFrontmatter, 'security')
-  logMissingFields(mdxFilesWithFeatures, mdxFileFrontmatter, 'features')
-  logMissingFields(mdxFilesWithBugs, mdxFileFrontmatter, 'bugs')
+  exitCode = logMissingFields(mdxFilesWithSecurity, mdxFileFrontmatter, 'security')
+  exitCode = logMissingFields(mdxFilesWithFeatures, mdxFileFrontmatter, 'features')
+  exitCode = logMissingFields(mdxFilesWithBugs, mdxFileFrontmatter, 'bugs')
 
   const missingFiles = []
 
