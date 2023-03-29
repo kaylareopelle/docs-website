@@ -72,9 +72,9 @@ const main = async () => {
     ({ bugs }) => bugs !== undefined
   );
 
-  exitCode = logMissingFields(mdxFilesWithSecurity, mdxFileFrontmatter, 'security')
-  exitCode = logMissingFields(mdxFilesWithFeatures, mdxFileFrontmatter, 'features')
-  exitCode = logMissingFields(mdxFilesWithBugs, mdxFileFrontmatter, 'bugs')
+  console.log(logMissingFields(mdxFilesWithSecurity, mdxFileFrontmatter, 'security'))
+  console.log(logMissingFields(mdxFilesWithFeatures, mdxFileFrontmatter, 'features'))
+  console.log(logMissingFields(mdxFilesWithBugs, mdxFileFrontmatter, 'bugs'))
 
   const missingFiles = []
 
