@@ -18,21 +18,20 @@ const findMissingFiles = (lilGroup, bigGroup) => {
 }
 
 const logMissingFields = (subset, fullset, type) => {
-  console.log(`Checking for missing ${type} fields...`)
+  let messages = []
+  let code = 0
+  messages.push(`Checking for missing ${type} fields...`)
   if(subset.length !== fullset.length) {
     const missingFiles = findMissingFiles(subset, fullset)
-    let errorMessage = []
-
-    errorMessage.push(`ERROR: ${type} front matter field not present in the following files`)
-    missingFiles.forEach(filename => errorMessage.push(`- ${filename}`));
-    errorMessage.push(`Please add '${type}: []' to the front matter on these files.`)
-
-    console.error(errorMessage.join(`\n`))
-    return 0
+    messages.push(`ERROR: ${type} front matter field not present in the following files`)
+    missingFiles.forEach(filename => messages.push(`- ${filename}`));
+    messages.push(`Please add '${type}: []' to the front matter on these files.`)
+    code = 1
   } else {
-    console.log(`PASS: Metadata fields for ${type} found in all changed agent release notes!`)
-    return 1
+    messages.push(`PASS: Metadata fields for ${type} found in all changed agent release notes!`)
+    code = 0
   }
+  return [code, messages.join(`\n`)]
 }
 
 const main = async () => {
@@ -40,6 +39,7 @@ const main = async () => {
   const url = options.url || null;
   let mdxFileData;
   let exitCode = 0;
+  let messages = []
   let prFileData = null
 
   if (url) {
@@ -76,9 +76,14 @@ const main = async () => {
   const featuresResult = logMissingFields(mdxFilesWithFeatures, mdxFileFrontmatter, 'features')
   const bugsResult = logMissingFields(mdxFilesWithBugs, mdxFileFrontmatter, 'bugs')
 
-  securityResult > 0 ? exitCode = securityResult : exitCode
-  featuresResult > 0 ? exitCode = featuresResult : exitCode
-  bugsResult > 0 ? exitCode = bugsResult : exitCode
+  securityResult[0] > 0 ? exitCode = securityResult : exitCode
+  featuresResult[0] > 0 ? exitCode = featuresResult : exitCode
+  bugsResult[0] > 0 ? exitCode = bugsResult : exitCode
+
+  messages.push(securityResult[1])
+  messages.push(featuresResult[1])
+  messages.push(bugsResult[1])
+  console.log(messages)
 
   const missingFiles = []
 
