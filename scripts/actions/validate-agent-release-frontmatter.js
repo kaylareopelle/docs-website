@@ -22,13 +22,16 @@ const logMissingFields = (subset, fullset, type) => {
   if(subset.length !== fullset.length) {
     exitCode = 1
     const missingFiles = findMissingFiles(subset, fullset)
-    console.error(`ERROR: ${type} front matter field not present in the following files`)
-    missingFiles.forEach(filename => console.error(`- ${filename}`));
-    console.error(`Please add '${type}: []' to the front matter on these files.`)
+    let errorMessage = []
+
+    errorMessage.push(`ERROR: ${type} front matter field not present in the following files`)
+    missingFiles.forEach(filename => errorMessage.push(`- ${filename}`));
+    errorMessage.push(`Please add '${type}: []' to the front matter on these files.`)
+    
+    console.error(errorMessage.join(`\n`))
   } else {
     console.log(`PASS: Metadata fields for ${type} found in all changed agent release notes!`)
   }
-  console.log('===============')
 }
 
 const main = async () => {
